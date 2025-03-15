@@ -21,6 +21,99 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://github.com/rvish200">
+    <script src="js/⁹main.js">
+            const message = formData.get('message');
+    
+    const errors = [];
+    
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        errors.push('Please enter a valid email address');
+    }
+    
+    if (name.length < 2) {
+        errors.push('Name must be at least 2 characters long');
+    }
+    
+    if (message.length < 10) {
+        errors.push('Message must be at least 10 characters long');
+    }
+    
+    return errors;
+}
+
+// Update contact form handling with validation
+contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(contactForm);
+    const errors = validateForm(formData);
+    
+    if (errors.length > 0) {
+        alert(errors.join('\n'));
+        return;
+    }
+    
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+
+    try {
+        const response = await fetch('/contact', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('Message sent successfully!');
+            contactForm.reset();
+        } else {
+            throw new Error('Failed to send message');
+        }
+    } catch (error) {
+        alert('Error sending message. Please try again.');
+    } finally {
+        submitButton.textContent = 'Send Message';
+        submitButton.disabled = false;
+    }
+});
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+    threshold: 0.2
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.project-card, .skill-card').forEach(element => {
+    observer.observe(element);
+});
+
+// Typing animation for hero text
+const text = "Full-Stack Developer";
+const heroText = document.querySelector('.animated-text');
+let index = 0;
+
+function typeText() {
+    if (index < text.length) {
+        heroText.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeText, 100);
+    }
+}
+
+// Start typing animation when page loads
+window.addEventListener('load', () => {
+    heroText.textContent = '';
+    setTimeout(typeText, 500);
+});
+    </script>
+    
     
     <title>Rishabh Vishwakarma | Full Stack Developer Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Open+Sans&display=swap" rel="stylesheet">
